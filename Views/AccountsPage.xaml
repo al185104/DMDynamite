@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DMDynamite.Views.AccountsPage"
+             xmlns:models="clr-namespace:DMDynamite.Models"
+             xmlns:helper="clr-namespace:DMDynamite.Helpers"
+             Shell.NavBarIsVisible="False">
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" Padding="10" ColumnDefinitions="*,*,*">
+            <VerticalStackLayout Spacing="0">
+                <Label Text="Instagram sender accounts" FontSize="Header" FontFamily="Header"/>
+                <Label Text="Accounts below are used to send dms. Be sure to resolve any problems before using them to blast." FontSize="Caption" FontFamily="Header"/>
+            </VerticalStackLayout>
+
+            <HorizontalStackLayout Grid.Column="2" HorizontalOptions="End" Spacing="10">
+                <Button Text="Add account" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.UserPlus}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"
+                        Command="{Binding ShowLoginPopupCommand}"/>
+                <Button Text="Add proxy" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.Box}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"
+                        Command="{Binding ShowProxyPopupCommand}"/>
+                <Button Text="Fix accounts" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.Tool}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"/>
+            </HorizontalStackLayout>
+        </Grid>
+        
+        <RefreshView Grid.Row="1">
+            <CollectionView ItemsSource="{Binding Senders}">
+                <CollectionView.Header>
+                    <Grid ColumnDefinitions="Auto,300,50,*,*,*,*,300,*,*,*,*" BackgroundColor="{StaticResource TextPrimary}" ColumnSpacing="10" Padding="5,10">
+                        <Grid.Resources>
+                            <ResourceDictionary>
+                                <Style TargetType="Label">
+                                    <Setter Property="TextColor" Value="White"/>
+                                    <Setter Property="FontAttributes" Value="Bold"/>
+                                    <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                                </Style>
+                            </ResourceDictionary>
+                        </Grid.Resources>
+                        <Label Grid.Column="0" Text="Issue"/>
+                        <Label Grid.Column="1" Text="Id"/>
+                        <Label Grid.Column="2" Text="Image"/>
+                        <Label Grid.Column="3" Text="Username"/>
+                        <Label Grid.Column="4" Text="Password"/>
+                        <Label Grid.Column="5" Text="Challenge"/>
+                        <Label Grid.Column="6" Text="Status"/>
+                        <Label Grid.Column="7" Text="Proxy"/>
+                        <Label Grid.Column="8" Text="Created"/>
+                        <Label Grid.Column="9" Text="Updated"/>
+                        <Label Grid.Column="10" Text="Followers"/>
+                        <Label Grid.Column="11" Text="Followings"/>
+                    </Grid>
+                </CollectionView.Header>
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="4"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:SenderAccount">
+                        <Grid ColumnDefinitions="Auto,300,40,*,*,*,*,300,*,*,*,*" ColumnSpacing="10" Padding="5,0">
+                            <Grid.Resources>
+                                <ResourceDictionary>
+                                    <Style TargetType="Label">
+                                        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                                        <Setter Property="VerticalTextAlignment" Value="Center"/>
+                                        <Setter Property="MaxLines" Value="1"/>
+                                        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+                                    </Style>
+                                </ResourceDictionary>
+                            </Grid.Resources>
+                            <Label Grid.Column="0" Text="{Binding HasIssue}"/>
+                            <Label Grid.Column="1" Text="{Binding Id}"/>
+                            <Image Grid.Column="2" Source="{Binding ProfilePicture}" HeightRequest="40" HorizontalOptions="Center"/>
+                            <Label Grid.Column="3" Text="{Binding Username}"/>
+                            <Label Grid.Column="4" Text="{Binding Password}"/>
+                            <Label Grid.Column="5" Text="{Binding ChallengeURL}"/>
+                            <Label Grid.Column="6" Text="{Binding Status}"/>
+                            <Label Grid.Column="7" Text="{Binding ProxyFK}"/>
+                            <Label Grid.Column="8" Text="{Binding CreatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
+                            <Label Grid.Column="9" Text="{Binding UpdatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
+                            <Label Grid.Column="10" Text="{Binding FollowersCount}"/>
+                            <Label Grid.Column="11" Text="{Binding FollowingsCount}"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <ActivityIndicator Grid.RowSpan="2"/>
+    </Grid>
+</ContentPage>

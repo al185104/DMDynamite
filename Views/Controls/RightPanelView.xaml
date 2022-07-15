@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:DMDynamite.Models"
+             xmlns:helper="clr-namespace:DMDynamite.Helpers"
+             x:Class="DMDynamite.Views.Controls.RightPanelView">
+    
+    <Grid RowDefinitions="Auto,Auto,0.5*,Auto,*" BackgroundColor="{StaticResource White}">
+        <Grid Grid.Row="0" RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto,Auto">
+            <Label Grid.Row="0" Text="{Binding MyAccount.FullName, StringFormat='Hi {0}'}" FontSize="Micro" FontAttributes="Bold"/>
+            <Label Grid.Row="1" Text="Good Morning!" FontSize="Caption"/>
+
+            <Button Grid.Column="1" Grid.RowSpan="2" Text="{Static helper:Icon.MessageCircle}" FontFamily="Icons">
+                <Button.Shadow>
+                    <Shadow Brush="Black" Offset="5,5" Radius="5" Opacity="0.2"/>
+                </Button.Shadow>
+            </Button>
+            <Button Grid.Column="2" Grid.RowSpan="2" Text="{Static helper:Icon.Send}" FontFamily="Icons"
+                        Command="{Binding BackgroundSendCommand}">
+                <Button.Shadow>
+                    <Shadow Brush="Black" Offset="5,5" Radius="5" Opacity="0.2"/>
+                </Button.Shadow>
+            </Button>
+        </Grid>
+
+        <!--profile-->
+        <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,*,*">
+            <Image Grid.ColumnSpan="3" HorizontalOptions="Center" HeightRequest="80" WidthRequest="80" >
+                <Image.Source>
+                    <UriImageSource Uri="{Binding MyAccount.HdProfilePicUrlInfo.Uri}" CachingEnabled="True" CacheValidity="3"/>
+                </Image.Source>
+            </Image>
+            <Label Grid.Row="1" Grid.ColumnSpan="3" Text="{Binding MyAccount.Username}" FontSize="Micro" FontAttributes="Bold" HorizontalTextAlignment="Center" MaxLines="1" LineBreakMode="TailTruncation"/>
+            <Label Grid.Row="2" Grid.ColumnSpan="3" Text="{Binding MyAccount.FullName}" FontSize="Caption" HorizontalTextAlignment="Center" MaxLines="1" LineBreakMode="TailTruncation"/>
+
+            <VerticalStackLayout Grid.Row="3" Grid.Column="0" Padding="5,20">
+                <Label Text="{Binding MyAccount.FollowerCount, StringFormat='{0:#,0}'}" FontAttributes="Bold" FontSize="Micro" HorizontalTextAlignment="Center"/>
+                <Label Text="Followers" FontSize="Caption" HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Row="3" Grid.Column="1" Padding="5,20">
+                <Label Text="{Binding MyAccount.FollowingCount, StringFormat='{0:#,0}'}" FontAttributes="Bold" FontSize="Micro" HorizontalTextAlignment="Center"/>
+                <Label Text="Followings" FontSize="Caption" HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Row="3" Grid.Column="2" Padding="5,20">
+                <Label Text="{Binding Senders.Count}" FontAttributes="Bold" FontSize="Micro" HorizontalTextAlignment="Center"/>
+                <Label Text="Accounts Count" FontSize="Caption" HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+
+            <Grid ColumnDefinitions="*,*" Grid.Row="4" Grid.ColumnSpan="3" Padding="0">
+                <Button Grid.Column="0" Text="Refresh Profile" HorizontalOptions="FillAndExpand" Command="{Binding ReloginAccountCommand}"/>
+                <Button Grid.Column="1" Text="Edit Profile" HorizontalOptions="FillAndExpand"/>
+            </Grid>
+        </Grid>
+
+        <!--media-->
+        <Grid ColumnDefinitions="*,*" Grid.Row="2">
+            <Frame Grid.Column="0" CornerRadius="5" BackgroundColor="#f2e8ff" Padding="10">
+                <StackLayout>
+                    <Label Text="{Static helper:Icon.x}" FontFamily="Icons" HorizontalOptions="End" VerticalOptions="Start"/>
+                    <Label Text="{Static helper:Icon.Video}" FontFamily="Icons" HorizontalOptions="StartAndExpand" VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" TextColor="{StaticResource Primary}" FontSize="40" Padding="5,0"/>
+                    <Label Text="Videos" FontSize="Large" TextColor="{StaticResource Primary}"/>
+                    <Label Text="Click To Add Video." FontSize="Caption" TextColor="{StaticResource Primary}"/>
+                </StackLayout>
+            </Frame>
+            <Frame Grid.Column="1" CornerRadius="5" BackgroundColor="#fef3f0" Padding="10">
+                <StackLayout>
+                    <Label Text="{Static helper:Icon.x}" FontFamily="Icons" HorizontalOptions="End" VerticalOptions="Start"/>
+                    <Label Text="{Static helper:Icon.Camera}" FontFamily="Icons" HorizontalOptions="StartAndExpand" VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" TextColor="#ab6654" FontSize="40" Padding="5,0"/>
+                    <Label Text="Photos" FontSize="Large" TextColor="#ab6654"/>
+                    <Label Text="Click To Add Photo." FontSize="Caption" TextColor="#ab6654"/>
+                </StackLayout>
+            </Frame>
+        </Grid>
+
+        <Label Grid.Row="3" Text="- Delete queue" HorizontalOptions="End" VerticalOptions="End" FontAttributes="Bold">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding DeleteAllRecipientsCommand}"/>
+            </Label.GestureRecognizers>
+        </Label>
+
+        <!--recipients-->
+        <RefreshView Grid.Row="4" IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}" VerticalOptions="FillAndExpand">
+            <CollectionView ItemsSource="{Binding Recipients}" VerticalScrollBarVisibility="Never" BackgroundColor="Aquamarine">
+                <CollectionView.EmptyView>
+                    <Label Text="No accounts" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Span="3" Orientation="Vertical" VerticalItemSpacing="1" HorizontalItemSpacing="1"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="0" Margin="0" HeightRequest="100" BackgroundColor="Red">
+                            <Image Source="{Binding ProfilePicture}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill"/>
+                            <HorizontalStackLayout HorizontalOptions="End" VerticalOptions="Start" Spacing="10" Padding="10,5">
+                                <Label Text="{Static helper:Icon.Lock}" FontFamily="Icons" IsVisible="{Binding IsPrivate}" TextColor="White"/>
+                                <Label Text="{Binding Username}" HorizontalOptions="End" VerticalOptions="Start" FontSize="Caption" TextColor="White" FontAttributes="Bold"/>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+    </Grid>
+</ContentView>

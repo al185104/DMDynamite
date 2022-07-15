@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:DMDynamite.Models"
+             xmlns:helper="clr-namespace:DMDynamite.Helpers"
+             x:Class="DMDynamite.Views.Controls.CenterPanelView">
+    
+    <Grid BackgroundColor="{StaticResource Background}"
+              RowDefinitions="100,Auto,Auto,*,Auto,140" Padding="40,20">
+
+        <!--saved accounts-->
+        <RefreshView IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}">
+            <CollectionView ItemsSource="{Binding Senders}" HorizontalScrollBarVisibility="Default" SelectionMode="None">
+                <CollectionView.EmptyView>
+                    <Label Text="No saved accounts" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Span="1" Orientation="Horizontal" HorizontalItemSpacing="2"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid WidthRequest="80" RowDefinitions="50,Auto" RowSpacing="0" Padding="0" Margin="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates">
+                                    <VisualState Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="{StaticResource Background}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="{StaticResource Secondary}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border Stroke="{StaticResource Primary}" StrokeThickness="2" StrokeShape="Ellipse 40,40" Background="#2B0B98" Padding="0" HorizontalOptions="Center">
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding HasIssues}" Value="True">
+                                        <Setter Property="Stroke" Value="#C49B33"/>
+                                        <Setter Property="Background" Value="#C49B33"/>
+                                    </DataTrigger>
+                                </Border.Triggers>
+                                <Image Aspect="AspectFit">
+                                    <Image.Source>
+                                        <UriImageSource Uri="{Binding ProfilePicture}" CacheValidity="5" CachingEnabled="True"/>
+                                    </Image.Source>
+                                </Image>
+                            </Border>
+                            <Label Grid.Row="1" Text="{Binding Username}" FontSize="Caption" HorizontalOptions="FillAndExpand" MaxLines="2" LineBreakMode="CharacterWrap" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <Button Text="{Static helper:Icon.SkipForward}" FontFamily="Icons" HeightRequest="30" WidthRequest="30" CornerRadius="15" Padding="0"
+                    HorizontalOptions="Start" VerticalOptions="Start" TranslationY="19" TranslationX="-10" BackgroundColor="#f2e8ff" TextColor="{StaticResource TextPrimary}" Command="{Binding SelectAllAccountsCommand}"/>
+        <Button Text="{Static helper:Icon.PlusCircle}" FontFamily="Icons" HeightRequest="30" WidthRequest="30" Padding="0" CornerRadius="15"
+                    HorizontalOptions="Start" VerticalOptions="Start" Command="{Binding ShowLoginPopupCommand}"/>
+
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,*" Padding="2">
+            <Label Text="30 Days Performance" FontAttributes="Bold" VerticalOptions="Center"/>
+            <Label Grid.Column="1" Text="{Static helper:Icon.PlayCircle}" FontFamily="Icons" VerticalTextAlignment="Center" 
+                       TextColor="{StaticResource Primary}" FontSize="Medium" IsVisible="{Binding IsSending}">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding BackgroundCancelSendCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+        </Grid>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*,*,*" ColumnSpacing="40">
+            <Frame Grid.Column="0" Padding="20" BackgroundColor="{StaticResource Primary}" CornerRadius="4">
+                <StackLayout>
+                    <Label Text="Successes" TextColor="LightGray"/>
+                    <Label Text="{Binding SuccessCount, StringFormat='{0:#,0}'}" FontSize="Medium" FontAttributes="Bold" TextColor="White"/>
+                </StackLayout>
+            </Frame>
+            <Frame Grid.Column="1" Padding="20" BackgroundColor="{StaticResource Primary}" CornerRadius="4">
+                <StackLayout>
+                    <Label Text="Failures" TextColor="LightGray"/>
+                    <Label Text="{Binding FailureCount, StringFormat='{0:#,0}'}" FontSize="Medium" FontAttributes="Bold" TextColor="White"/>
+                </StackLayout>
+            </Frame>
+            <Frame Grid.Column="2" Padding="20" BackgroundColor="{StaticResource Primary}" CornerRadius="4">
+                <StackLayout>
+                    <Label Text="Pending" TextColor="LightGray"/>
+                    <Label Text="{Binding TotalCount, StringFormat='{0:#,0}'}" FontSize="Medium" FontAttributes="Bold" TextColor="White"/>
+                </StackLayout>
+            </Frame>
+        </Grid>
+
+        <!-- center analytics panel-->
+        <Grid Grid.Row="3" RowDefinitions="Auto,*,*" RowSpacing="20" ColumnDefinitions="*,0.6*,0.6*,*" ColumnSpacing="20">
+            <Label Grid.Row="0" Grid.Column="0" Text="Analytics" FontAttributes="Bold" />
+
+            <Grid Grid.Row="1" Grid.ColumnSpan="3" BackgroundColor="White"/>
+
+            <Frame Grid.Row="2" Grid.Column="0" BackgroundColor="#f2e8ff" CornerRadius="10">
+                <Grid>
+
+                </Grid>
+            </Frame>
+
+            <Frame Grid.Row="2" Grid.Column="1" BackgroundColor="White" CornerRadius="10">
+                <StackLayout>
+                    <Button CornerRadius="25" WidthRequest="50" HeightRequest="80" Text="{Static helper:Icon.RefreshCcw}" FontFamily="Icons" Padding="10" FontSize="Medium"
+                                Command="{Binding RefreshActivityCommand}"/>
+                    <Label Text="Refresh account&#x0a;activity" MaxLines="2" HorizontalTextAlignment="Center" VerticalTextAlignment="End" VerticalOptions="FillAndExpand" FontAttributes="Bold"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame Grid.Row="2" Grid.Column="2" BackgroundColor="White" CornerRadius="10">
+                <StackLayout>
+                    <Button CornerRadius="25" WidthRequest="50" HeightRequest="80" Text="{Static helper:Icon.PlusCircle}" FontFamily="Icons" Padding="10" FontSize="Medium"/>
+                    <Label Text="Add new&#x0a;posts" MaxLines="2" HorizontalTextAlignment="Center" VerticalTextAlignment="End" VerticalOptions="FillAndExpand" FontAttributes="Bold"/>
+                </StackLayout>
+            </Frame>
+
+            <Label Grid.Row="0" Grid.Column="3" Text="Events Distribution" FontAttributes="Bold"/>
+
+            <Frame Grid.Row="1" Grid.Column="3" Grid.RowSpan="2" BackgroundColor="White" CornerRadius="10">
+
+            </Frame>
+        </Grid>
+
+        <Label Grid.Row="4" Text="Statistics" FontAttributes="Bold" Margin="0,20,0,0"/>
+
+        <Grid Grid.Row="5" ColumnDefinitions="*,*" ColumnSpacing="20" Padding="0">
+            <Frame Grid.Column="0" CornerRadius="10" Padding="40,0" BorderColor="White" HasShadow="True">
+                <Frame.Shadow>
+                    <Shadow Brush="Black" Offset="5,5" Radius="5" Opacity="0.2"/>
+                </Frame.Shadow>
+                <Grid ColumnDefinitions="*,20,0.8*" RowDefinitions="*,*">
+                    <Label Text="Weekly Target" FontSize="Medium" FontAttributes="Bold" VerticalTextAlignment="End" HorizontalOptions="Start"/>
+                    <Label Grid.Row="1" Text="25% Achieved" TextColor="LightGray" VerticalTextAlignment="Start" HorizontalOptions="Start" />
+
+                    <BoxView Grid.Column="1" Grid.RowSpan="2" Color="LightGray" WidthRequest="1" VerticalOptions="FillAndExpand"/>
+
+                    <BoxView Grid.Column="2" Grid.RowSpan="2" HeightRequest="100" WidthRequest="100" Color="LightGray">
+                        <BoxView.Clip>
+                            <EllipseGeometry Center="50,50" RadiusX="50" RadiusY="50"/>
+                        </BoxView.Clip>
+                    </BoxView>
+                </Grid>
+            </Frame>
+            <Frame Grid.Column="1" CornerRadius="10" Padding="40,0" BackgroundColor="{StaticResource Primary}" HasShadow="True">
+                <Frame.Shadow>
+                    <Shadow Brush="Black" Offset="5,5" Radius="5" Opacity="0.2"/>
+                </Frame.Shadow>
+                <Grid ColumnDefinitions="*,20,0.8*" RowDefinitions="*,*">
+                    <Label Text="Monthly Target" FontSize="Medium" TextColor="White" FontAttributes="Bold" VerticalTextAlignment="End"/>
+                    <Label Grid.Row="1" Text="50% Achieved" TextColor="White" VerticalTextAlignment="Start"/>
+
+                    <BoxView Grid.Column="1" Grid.RowSpan="2" Color="LightGray" WidthRequest="1" VerticalOptions="FillAndExpand"/>
+
+                    <BoxView Grid.Column="2" Grid.RowSpan="2" HeightRequest="100" WidthRequest="100" Color="White">
+                        <BoxView.Clip>
+                            <EllipseGeometry Center="50,50" RadiusX="50" RadiusY="50"/>
+                        </BoxView.Clip>
+                    </BoxView>
+                </Grid>
+            </Frame>
+        </Grid>
+    </Grid>
+</ContentView>

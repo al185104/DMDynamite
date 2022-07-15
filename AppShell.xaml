@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="DMDynamite.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:DMDynamite.Views"
+    xmlns:helper="clr-namespace:DMDynamite.Helpers"
+    FlyoutBehavior="{OnIdiom Default=Locked, Phone=Disabled}"
+    FlyoutBackgroundColor="{StaticResource Background}"
+    FlyoutWidth="80">
+
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid ColumnDefinitions="Auto,*" Padding="15" ColumnSpacing="0">
+                <Grid.Resources>
+                    <ResourceDictionary>
+                        <Style TargetType="Label">
+                            <Setter Property="TextColor" Value="{StaticResource TextPrimary}"/>
+                            <Setter Property="VerticalTextAlignment" Value="Center"/>
+                            <Setter Property="VerticalOptions" Value="Center"/>
+                            <Setter Property="HorizontalOptions" Value="Center"/>
+                            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                        </Style>
+                    </ResourceDictionary>
+                </Grid.Resources>
+                <Label Grid.Column="0" Text="{Binding Icon}" FontFamily="Icons" FontSize="Medium"/>
+                <Label Grid.Column="1" Text="{Binding Title}" FontSize="Small" VerticalTextAlignment="Center"/>
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>
+
+    <Shell.FlyoutHeader>
+        <Grid Padding="0,10,0,40">
+            <Image Source="submark_3.png" Aspect="AspectFill" HeightRequest="80"/>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <FlyoutItem Icon="{Static helper:Icon.Home}">
+        <ShellContent ContentTemplate="{DataTemplate views:HomePage}" Route="HomePage" />
+    </FlyoutItem>
+    <FlyoutItem Icon="{Static helper:Icon.Users}">
+        <ShellContent ContentTemplate="{DataTemplate views:AccountsPage}" Route="AccountsPage" />
+    </FlyoutItem>
+    <FlyoutItem Icon="{Static helper:Icon.Database}">
+        <ShellContent ContentTemplate="{DataTemplate views:RecipientsPage}" Route="RecipientsPage" />
+    </FlyoutItem>
+    <FlyoutItem Icon="{Static helper:Icon.Calendar}">
+        <ShellContent ContentTemplate="{DataTemplate views:ReportsPage}" Route="ReportsPage" />
+    </FlyoutItem>
+    <FlyoutItem Icon="{Static helper:Icon.Settings}">
+        <ShellContent ContentTemplate="{DataTemplate views:SettingsPage}" Route="SettingsPage" />
+    </FlyoutItem>
+
+</Shell>

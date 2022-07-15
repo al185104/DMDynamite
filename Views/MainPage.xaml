@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:DMDynamite.Models"
+             xmlns:helper="clr-namespace:DMDynamite.Helpers"
+             xmlns:controls="clr-namespace:DMDynamite.Views.Controls"
+             x:Class="DMDynamite.MainPage"
+             Shell.NavBarIsVisible="False">
+    
+    <Grid ColumnDefinitions="1*,3.2*,1.4*" Padding="0">
+        <!--left panel-->
+        <controls:LeftPanelView Grid.Column="0"/>
+
+        <!--center panel-->
+        <controls:CenterPanelView Grid.Column="1"/>
+
+        <!--right panel-->
+        <controls:RightPanelView Grid.Column="2"/>
+
+        <ActivityIndicator Grid.ColumnSpan="3"/>
+    </Grid>
+ 
+</ContentPage>
