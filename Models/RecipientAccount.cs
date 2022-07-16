@@ -12,6 +12,8 @@
         public bool IsPrivate { get; set; }
         public int FollowersCount { get; set; }
         public string Status { get; set; }
+        public SendingOption SendingOption { get; set; }
+        public string SearchText { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
     }

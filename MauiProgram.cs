@@ -36,12 +36,16 @@ public static class MauiProgram
         service.AddSingleton<MainPage>();
         service.AddSingleton<AccountsPage>();
         service.AddSingleton<RecipientsPage>();
+        service.AddSingleton<HomePage>();
+        service.AddSingleton<ReportsPage>();
         #endregion
 
         #region ViewModels
         service.AddSingleton<MainViewModel>();
         service.AddSingleton<AccountsViewModel>();
         service.AddSingleton<RecipientsViewModel>();
+        service.AddSingleton<HomeViewModel>();
+        service.AddSingleton<ReportsViewModel>();
         #endregion
 
         #region Popup

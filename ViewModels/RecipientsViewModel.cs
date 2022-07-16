@@ -61,7 +61,15 @@
             if(!MultipleHelper.ApiList.Any())
                 MultipleHelper.LoadSessions();
 
-            var api = MultipleHelper.ApiList.FirstOrDefault();
+            var senderName = Preferences.Get("SenderName", string.Empty);
+
+            IInstaApi api;
+            if (string.IsNullOrEmpty(senderName))
+                api = MultipleHelper.ApiList.FirstOrDefault();
+            else
+                api = MultipleHelper.ApiList.FirstOrDefault(i => i.GetLoggedUser().UserName.ToLower().Equals(senderName.ToLower()));
+
+
             if (api != null)
                 _api = api;
         }
@@ -108,38 +116,41 @@
                 if (string.IsNullOrEmpty(search)) return;
 
                 if (_api == null)
-                {                    
-                    await App.Current.MainPage.DisplayAlert("No account", "You currently don't have any selected accounts to search.", "Back");
-                    return;
-                }
+                    _api = MultipleHelper.ApiList.FirstOrDefault();
 
                 if (sendingOption == SendingOption.Location)
                     followerList = await _instagramService.SearchByLocationTagAsync(_api, latitude, longitude, search, PaginationParameters.MaxPagesToLoad(5), 1000, searchFromTop); // true is search top results
                 else if (sendingOption == SendingOption.Hashtag)
-                    followerList = await _instagramService.SearchByHashTagAsync(_api, search, PaginationParameters.MaxPagesToLoad(2), 1000);
+                    followerList = await _instagramService.SearchByHashTagAsync(_api, search, PaginationParameters.MaxPagesToLoad(5), 1000);
                 else
-                    followerList = await _api.UserProcessor.GetUserFollowersAsync(search, PaginationParameters.MaxPagesToLoad(2));
+                    followerList = await _api.UserProcessor.GetUserFollowersAsync(search, PaginationParameters.MaxPagesToLoad(5));
 
                 if (followerList.Succeeded)
                 {
-                    foreach (var follower in followerList.Value.Distinct())
+                    var ret = await App.Current.MainPage.DisplayAlert("Add recipients", $"Found {followerList.Value.Count()} accounts. Add them as recipients?", "Yes", "No");
+                    if (ret)
                     {
-                        var instaAccount = new RecipientAccount
+                        foreach (var follower in followerList.Value.Distinct())
                         {
-                            Pk = follower.Pk.ToString(),
-                            Username = follower.UserName,
-                            Fullname = follower.FullName,
-                            ProfilePicture = follower.ProfilePicture,
-                            IsVerified = follower.IsVerified,
-                            IsPrivate = follower.IsPrivate,
-                        };
+                            var instaAccount = new RecipientAccount
+                            {
+                                Pk = follower.Pk.ToString(),
+                                Username = follower.UserName,
+                                Fullname = follower.FullName,
+                                ProfilePicture = follower.ProfilePicture,
+                                IsVerified = follower.IsVerified,
+                                IsPrivate = follower.IsPrivate,
+                                SearchText = search,
+                                SendingOption = SendingOption
+                            };
 
-                        var result = await _recipientDataStore.AddItemAsync(instaAccount);
-                        if (!result)
-                            _logger.LogError($"Something wrong in adding {instaAccount.Fullname} to recipients.");
+                            var result = await _recipientDataStore.AddItemAsync(instaAccount);
+                            if (!result)
+                                _logger.LogError($"Something wrong in adding {instaAccount.Fullname} to recipients.");
+                        }
+
+                        await LoadRecipientsCommand.ExecuteAsync(null);
                     }
-
-                    await LoadRecipients();
                 }
             }
             catch (Exception e)
@@ -203,7 +214,10 @@
                     if (result < 0)
                         _logger.LogError("Something went wrong in deleting entries.");
                     else
-                        await LoadRecipients();
+                    {
+                        TotalCount = 0;
+                        Recipients.Clear();
+                    }                       
                 }
             }
             catch (Exception e)

@@ -2,10 +2,78 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DMDynamite.Views.ReportsPage"
+             xmlns:models="clr-namespace:DMDynamite.Models"
+             xmlns:helper="clr-namespace:DMDynamite.Helpers"
              Shell.NavBarIsVisible="False">
-    <StackLayout>
-        <Label Text="Welcome to .NET MAUI!"
-                VerticalOptions="Center" 
-                HorizontalOptions="Center" />
-    </StackLayout>
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" Padding="10" ColumnDefinitions="*,Auto">
+            <VerticalStackLayout Spacing="0">
+                <Label Text="Activities" FontSize="Header" FontFamily="Header"/>
+                <Label Text="{Binding Activities.Count, StringFormat='{0} activities performed today.'}" FontSize="Caption" FontFamily="RegularBold"/>
+            </VerticalStackLayout>
+
+            <!--<HorizontalStackLayout Grid.Column="1" HorizontalOptions="End" Spacing="10">
+                <Button Text="Add account" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.UserPlus}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"
+                        Command="{Binding ShowLoginPopupCommand}"/>
+                <Button Text="Add proxy" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.Box}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"
+                        Command="{Binding ShowProxyPopupCommand}"/>
+                <Button Text="Fix accounts" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.Tool}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"/>
+            </HorizontalStackLayout>-->
+        </Grid>
+
+        <RefreshView Grid.Row="1">
+            <CollectionView x:Name="senders" ItemsSource="{Binding Activities}">
+                <CollectionView.Header>
+                    <Grid ColumnDefinitions="*,*,*,2*,80,80,120,120" BackgroundColor="{StaticResource TextPrimary}" ColumnSpacing="10" Padding="5,10">
+                        <Grid.Resources>
+                            <ResourceDictionary>
+                                <Style TargetType="Label">
+                                    <Setter Property="TextColor" Value="White"/>
+                                    <Setter Property="FontAttributes" Value="Bold"/>
+                                    <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                                </Style>
+                            </ResourceDictionary>
+                        </Grid.Resources>
+                        <Label Grid.Column="0" Text="Id"/>
+                        <Label Grid.Column="1" Text="Sender"/>
+                        <Label Grid.Column="2" Text="Recipient"/>
+                        <Label Grid.Column="3" Text="Message"/>
+                        <Label Grid.Column="4" Text="Successful"/>
+                        <Label Grid.Column="5" Text="Deleted"/>
+                        <Label Grid.Column="6" Text="Created Date"/>
+                        <Label Grid.Column="7" Text="Updated Date"/>
+                    </Grid>
+                </CollectionView.Header>
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="4"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Activity">
+                        <Grid ColumnDefinitions="*,*,*,2*,80,80,120,120" ColumnSpacing="10" Padding="5,0">
+                            <Grid.Resources>
+                                <ResourceDictionary>
+                                    <Style TargetType="Label">
+                                        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                                        <Setter Property="VerticalTextAlignment" Value="Center"/>
+                                        <Setter Property="MaxLines" Value="1"/>
+                                        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+                                    </Style>
+                                </ResourceDictionary>
+                            </Grid.Resources>
+                            <Label Grid.Column="0" Text="{Binding Id}"/>
+                            <Label Grid.Column="1" Text="{Binding SenderFK}"/>
+                            <Label Grid.Column="2" Text="{Binding RecipientFK}"/>
+                            <Label Grid.Column="3" Text="{Binding Message}" HorizontalOptions="FillAndExpand"/>
+                            <Label Grid.Column="4" Text="{Binding IsSuccessful}"/>
+                            <Label Grid.Column="5" Text="{Binding IsDeleted}"/>
+                            <Label Grid.Column="6" Text="{Binding CreatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
+                            <Label Grid.Column="7" Text="{Binding UpdatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <ActivityIndicator Grid.RowSpan="2"/>
+    </Grid>
 </ContentPage>

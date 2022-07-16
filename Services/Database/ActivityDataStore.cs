@@ -22,12 +22,12 @@
                 Id = Guid.NewGuid(),
                 CreatedDate = DateTime.Now,
                 IsDeleted = false,
-                MessageFK = item.MessageFK,
+                Message = item.Message,
                 RecipientFK = item.RecipientFK,
                 SenderFK = item.SenderFK,
-                SendingOption = item.SendingOption,
                 Status = item.Status,
-                UpdatedDate = item.UpdatedDate
+                IsSuccessful = item.IsSuccessful,
+                UpdatedDate = DateTime.Now
             };
 
             var ret = await dbActivity.InsertAsync(activity);
@@ -85,10 +85,12 @@
             return activity;
         }
 
-        public async Task<IEnumerable<Activity>> GetItemsByDateAsync(DateTime start, DateTime end)
+        public async Task<IEnumerable<Activity>> GetItemsByDateAsync(DateTime start, DateTime end, int range = 50)
         {
             await Init();
-            string query = $"select * from Activity where UpdatedDate between {start} and {end}";
+
+            string query = $"SELECT * FROM [Activity] WHERE ( [UpdatedDate] BETWEEN {start.Ticks} AND {end.Ticks})";
+
             var activities = await dbActivity.QueryAsync<Activity>(query);
             return activities;
         }
@@ -119,11 +121,11 @@
                 Id = item.Id,
                 CreatedDate = item.CreatedDate,
                 IsDeleted = false,
-                MessageFK = item.MessageFK,
+                Message = item.Message,
                 RecipientFK = item.RecipientFK,
                 SenderFK = item.SenderFK,
-                SendingOption = item.SendingOption,
                 Status = item.Status,
+                IsSuccessful = item.IsSuccessful,
                 UpdatedDate = DateTime.Now
             };
             var id = await dbActivity.UpdateAsync(account);

@@ -8,8 +8,8 @@
     <Grid RowDefinitions="Auto,*">
         <Grid Grid.Row="0" Padding="10" ColumnDefinitions="*,*,Auto" ColumnSpacing="20">
             <VerticalStackLayout Spacing="0">
-                <Label Text="Instagram recipient accounts" FontSize="Header" FontFamily="Header"/>
-                <Label Text="{Binding Recipients.Count, StringFormat='{0} remaining recipients.'}" FontSize="Caption" FontFamily="Regular"/>
+                <Label Text="Recipient accounts" FontSize="Header" FontFamily="Header"/>
+                <Label Text="{Binding TotalCount, StringFormat='{0} remaining recipients.'}" FontSize="Caption" FontFamily="RegularBold"/>
             </VerticalStackLayout>
 
             <Grid Grid.Column="1" RowSpacing="0" RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto">
@@ -66,7 +66,7 @@
         <RefreshView Grid.Row="1">
             <CollectionView ItemsSource="{Binding Recipients}">
                 <CollectionView.Header>
-                    <Grid ColumnDefinitions="*,*,*,*,*,*,*,*,*,*" BackgroundColor="{StaticResource TextPrimary}" ColumnSpacing="10" Padding="5,10">
+                    <Grid ColumnDefinitions="*,*,*,*,*,*,*,*,*,*,*,*" BackgroundColor="{StaticResource TextPrimary}" ColumnSpacing="10" Padding="5,10">
                         <Grid.Resources>
                             <ResourceDictionary>
                                 <Style TargetType="Label">
@@ -84,9 +84,11 @@
                         <Label Grid.Column="4" Text="Pk"/>
                         <Label Grid.Column="5" Text="Private"/>
                         <Label Grid.Column="6" Text="Verified"/>
-                        <Label Grid.Column="7" Text="Created"/>
-                        <Label Grid.Column="8" Text="Updated"/>
+                        <Label Grid.Column="7" Text="SendOption"/>
+                        <Label Grid.Column="8" Text="Search"/>
                         <Label Grid.Column="9" Text="Followers"/>
+                        <Label Grid.Column="10" Text="Created"/>
+                        <Label Grid.Column="11" Text="Updated"/>
                     </Grid>
                 </CollectionView.Header>
                 <CollectionView.ItemsLayout>
@@ -94,7 +96,7 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:RecipientAccount">
-                        <Grid ColumnDefinitions="*,*,*,*,*,*,*,*,*,*" ColumnSpacing="10" Padding="5,0">
+                        <Grid ColumnDefinitions="*,*,*,*,*,*,*,*,*,*,*,*" ColumnSpacing="10" Padding="5,0">
                             <Grid.Resources>
                                 <ResourceDictionary>
                                     <Style TargetType="Label">
@@ -112,9 +114,11 @@
                             <Label Grid.Column="4" Text="{Binding Pk}"/>
                             <Label Grid.Column="5" Text="{Binding IsPrivate}"/>
                             <Label Grid.Column="6" Text="{Binding IsVerified}"/>
-                            <Label Grid.Column="7" Text="{Binding CreatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
-                            <Label Grid.Column="8" Text="{Binding UpdatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
+                            <Label Grid.Column="7" Text="{Binding SendingOption}"/>
+                            <Label Grid.Column="8" Text="{Binding SearchText}"/>
                             <Label Grid.Column="9" Text="{Binding FollowersCount}"/>
+                            <Label Grid.Column="10" Text="{Binding CreatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
+                            <Label Grid.Column="11" Text="{Binding UpdatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

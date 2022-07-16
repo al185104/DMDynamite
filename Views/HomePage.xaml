@@ -1,11 +1,63 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:helper="clr-namespace:DMDynamite.Helpers"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              x:Class="DMDynamite.Views.HomePage"
              Shell.NavBarIsVisible="False">
-    <StackLayout>
-        <Label Text="Welcome to .NET MAUI!"
-                VerticalOptions="Center" 
-                HorizontalOptions="Center" />
-    </StackLayout>
+    <Grid ColumnDefinitions="*,*" BackgroundColor="{StaticResource Primary}" RowDefinitions="*,Auto" Padding="0">
+        <Grid.Resources>
+            <ResourceDictionary>
+                <Style TargetType="Label">
+                    <Setter Property="FontFamily" Value="RegularBold"/>
+                    <Setter Property="TextColor" Value="White"/>
+                    <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                </Style>
+
+                <Style TargetType="Editor">
+                    <Setter Property="TextColor" Value="White"/>
+                    <Setter Property="FontFamily" Value="Regular"/>
+                    <Setter Property="Margin" Value="0,40"/>
+                    <Setter Property="FontSize" Value="Small"/>
+                </Style>
+            </ResourceDictionary>
+        </Grid.Resources>
+
+        <Image Source="submark_4.png" Aspect="AspectFit" HeightRequest="400" VerticalOptions="End" HorizontalOptions="Start" TranslationX="-70"/>
+
+        <VerticalStackLayout Grid.Column="0" VerticalOptions="Center" HorizontalOptions="Center" Padding="0,0,0,100">
+            <Label Text="{Binding Source={x:Static sys:DateTime.Now},
+                   StringFormat='{}{0:MMM dd, ddd}'}"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"
+                   Margin="50"
+                   FontSize="120"/>
+
+            <Label Text="{Binding SuccessCount, StringFormat='{0:#,0}'}" FontSize="100" />
+            <Label VerticalTextAlignment="Start" VerticalOptions="Start">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="failed blasts: " TextColor="{StaticResource TextPrimary}" FontSize="Small" FontFamily="RegularBold"/>
+                        <Span Text="{Binding FailureCount, StringFormat='{0:#,0}'}" TextColor="{StaticResource TextPrimary}" FontSize="Large" FontFamily="RegularBold"/>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+        </VerticalStackLayout>
+
+        <BoxView WidthRequest="1" Color="White" VerticalOptions="FillAndExpand" Grid.Row="0" HorizontalOptions="End" Margin="0,40"/>
+
+        <Grid RowDefinitions="Auto,Auto,*,Auto" Grid.Column="1" VerticalOptions="FillAndExpand" Padding="40">
+            <Label Grid.Row="0" Text="Blast this message!" FontFamily="Header" FontSize="Header" HorizontalTextAlignment="Start"/>
+            <Label Grid.Row="1" Text="The quick brown fox jumps over the lazy dog." FontFamily="Regular" FontSize="Small" HorizontalTextAlignment="Start"/>
+            <Editor Grid.Row="2" VerticalOptions="FillAndExpand" Text="{Binding Message}"/>
+            <Button Grid.Row="3" Text="Send" ImageSource="{FontImage Color=White, FontFamily=Icons, Glyph={Static helper:Icon.Send}}" FontFamily="Header" FontSize="Large" HorizontalOptions="End" 
+                    BorderColor="White" Padding="50,15,60,10" Command="{Binding SendCommand}"/>
+        </Grid>
+
+        <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Padding="20" BackgroundColor="{StaticResource TextPrimary}">
+            <Label Text="Status" FontFamily="Header" FontSize="Title" VerticalTextAlignment="Center"/>
+        </HorizontalStackLayout>
+
+        <ActivityIndicator Grid.RowSpan="2" Grid.ColumnSpan="2" Color="{StaticResource TextPrimary}"/>
+    </Grid>
 </ContentPage>

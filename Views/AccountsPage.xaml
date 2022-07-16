@@ -6,13 +6,13 @@
              xmlns:helper="clr-namespace:DMDynamite.Helpers"
              Shell.NavBarIsVisible="False">
     <Grid RowDefinitions="Auto,*">
-        <Grid Grid.Row="0" Padding="10" ColumnDefinitions="*,*,*">
+        <Grid Grid.Row="0" Padding="10" ColumnDefinitions="*,Auto">
             <VerticalStackLayout Spacing="0">
-                <Label Text="Instagram sender accounts" FontSize="Header" FontFamily="Header"/>
-                <Label Text="Accounts below are used to send dms. Be sure to resolve any problems before using them to blast." FontSize="Caption" FontFamily="Header"/>
+                <Label Text="Sender accounts" FontSize="Header" FontFamily="Header"/>
+                <Label Text="{Binding Senders.Count, StringFormat='{0} accounts below are used to send dms. Be sure to resolve any problems before using them to blast.'}" FontSize="Caption" FontFamily="RegularBold"/>
             </VerticalStackLayout>
 
-            <HorizontalStackLayout Grid.Column="2" HorizontalOptions="End" Spacing="10">
+            <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End" Spacing="10">
                 <Button Text="Add account" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.UserPlus}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"
                         Command="{Binding ShowLoginPopupCommand}"/>
                 <Button Text="Add proxy" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.Box}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"
@@ -22,7 +22,7 @@
         </Grid>
         
         <RefreshView Grid.Row="1">
-            <CollectionView ItemsSource="{Binding Senders}">
+            <CollectionView x:Name="senders" ItemsSource="{Binding Senders}" SelectionMode="Single" SelectionChangedCommand="{Binding SelectSenderCommand}" SelectionChangedCommandParameter="{Binding Source={Reference senders}, Path=SelectedItem}">
                 <CollectionView.Header>
                     <Grid ColumnDefinitions="Auto,300,50,*,*,*,*,300,*,*,*,*" BackgroundColor="{StaticResource TextPrimary}" ColumnSpacing="10" Padding="5,10">
                         <Grid.Resources>
@@ -64,6 +64,9 @@
                                     </Style>
                                 </ResourceDictionary>
                             </Grid.Resources>
+                            <!--<Grid.GestureRecognizers>
+                                <TapGestureRecognizer NumberOfTapsRequired="2" Command="{Binding SelectSenderCommand}" CommandParameter="{Binding .}"/>
+                            </Grid.GestureRecognizers>-->
                             <Label Grid.Column="0" Text="{Binding HasIssue}"/>
                             <Label Grid.Column="1" Text="{Binding Id}"/>
                             <Image Grid.Column="2" Source="{Binding ProfilePicture}" HeightRequest="40" HorizontalOptions="Center"/>

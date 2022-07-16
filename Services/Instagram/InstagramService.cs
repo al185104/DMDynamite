@@ -142,7 +142,7 @@
             return Result.Fail(new ArgumentException("location unsuccessful"), default(InstaUserShortList), ResponseType.WrongRequest);
         }
 
-        public async Task<IResult<string>> SendMessage(IInstaApi api, string message, InstagramAccount recipient)
+        public async Task<IResult<string>> SendMessage(IInstaApi api, string message, RecipientAccount recipient)
         {
             string err = string.Empty;
             var sender = api.GetLoggedUser().LoggedInUser.UserName;
@@ -154,7 +154,7 @@
             var ret = await api.MessagingProcessor.SendDirectTextAsync(recipient.Pk, null, msg);
             if (ret.Succeeded)
             {
-                return Result.Success(recipient.Username);
+                return Result.Success($"{sender}:{recipient.Username}");
             }
             else
             {
@@ -171,14 +171,15 @@
                             {
                                 var ret2 = await api.MessagingProcessor.SendDirectTextAsync(recipient.Pk, null, msg);
                                 if (ret2.Succeeded)
-                                    return Result.Success($"{sender} successfully sent a message to {recipient}");
+                                    return Result.Success($"{sender}:{recipient.Username}");
                                 else
                                     err = ret2.Info.Message;
                             }
                             else if(!string.IsNullOrEmpty(accept.Info.Message) && accept.Info.Message.Equals("Create a password at least 6 characters long."))
                             {
                                 if (!string.IsNullOrEmpty(ret?.Info?.Challenge?.Url))
-                                    return Result.Fail<string>($"{sender}- failed to send a message to {recipient} : {accept.Info.Message}", ResponseType.ChallengeRequired, ret?.Info?.Challenge?.Url);
+                                    return Result.Fail<string>(ret?.Info?.Challenge?.Url, ResponseType.ChallengeRequired, $"{sender}:{recipient.Username}");
+                                //return Result.Fail<string>($"{sender}- failed to send a message to {recipient} : {accept.Info.Message}", ResponseType.ChallengeRequired, ret?.Info?.Challenge?.Url);
                             }
                             else
                                 err = accept.Info.Message;
@@ -186,14 +187,15 @@
                         else if(challengeData.Info.ResponseType == ResponseType.ChallengeRequired)
                         {
                             if (!string.IsNullOrEmpty(challengeData.Info.Challenge.Url))
-                                return Result.Fail<string>($"{sender}- failed to send a message to {recipient} : {err}", ResponseType.ChallengeRequired, challengeData.Info.Challenge.Url);
+                                return Result.Fail<string>(ret?.Info?.Challenge?.Url, ResponseType.ChallengeRequired, $"{sender}:{recipient.Username}");
+                            //return Result.Fail<string>($"{sender}- failed to send a message to {recipient} : {err}", ResponseType.ChallengeRequired, challengeData.Info.Challenge.Url);
                         }
                     }
                     else
                         err = ret.Info.Message;
                 }
             }
-            return Result.Fail<string>($"{sender}- failed to send a message to {recipient} : {err}");
+            return Result.Fail<string>($"{sender}- failed to send a message to {recipient} : {err}",ResponseType.UnExpectedResponse, $"{sender}:{recipient.Username}");
         }
 
         public async Task<IResult<InstaLoginTwoFactorResult>> TwoFactorAuthentication(IInstaApi api, string username, string code)

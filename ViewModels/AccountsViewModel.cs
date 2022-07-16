@@ -337,7 +337,34 @@
                 IsBusy = false;
                 _logger.LogInformation("+Login");
             }
-        } 
+        }
+
+        [ICommand]
+        async Task SelectSender(object obj)
+        {
+            try
+            {
+                if (obj == null) return;
+
+                var account = obj as SenderAccount;
+                _logger.LogInformation("+SelectSender");
+                var ret = await App.Current.MainPage.DisplayAlert("Use this account", $"Are you sure you want to use {account.Username} for search?", "Yes", "Back");
+                if (ret)
+                {
+                    // save sender account username
+                    Preferences.Set("SenderName", account.Username);
+                }
+            }
+            catch(Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
+            finally
+            {
+                _logger.LogInformation("-SelectSender");
+            }
+        }
         #endregion
     }
 }
