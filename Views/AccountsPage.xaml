@@ -17,14 +17,15 @@
                         Command="{Binding ShowLoginPopupCommand}"/>
                 <Button Text="Add proxy" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.Box}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"
                         Command="{Binding ShowProxyPopupCommand}"/>
-                <Button Text="Fix accounts" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.Tool}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"/>
+                <Button Text="Fix accounts" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.Tool}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"
+                        Command="{Binding FixAccountCommand}" CommandParameter="{Binding Source={Reference senders}, Path=SelectedItem}"/>
             </HorizontalStackLayout>
         </Grid>
-        
-        <RefreshView Grid.Row="1">
+
+        <RefreshView Grid.Row="1" Command="{Binding RefreshAccountsCommand}">
             <CollectionView x:Name="senders" ItemsSource="{Binding Senders}" SelectionMode="Single" SelectionChangedCommand="{Binding SelectSenderCommand}" SelectionChangedCommandParameter="{Binding Source={Reference senders}, Path=SelectedItem}">
                 <CollectionView.Header>
-                    <Grid ColumnDefinitions="Auto,300,50,*,*,*,*,300,*,*,*,*" BackgroundColor="{StaticResource TextPrimary}" ColumnSpacing="10" Padding="5,10">
+                    <Grid ColumnDefinitions="Auto,300,50,*,*,*,300,*,*,*,*" BackgroundColor="{StaticResource TextPrimary}" ColumnSpacing="10" Padding="5,10">
                         <Grid.Resources>
                             <ResourceDictionary>
                                 <Style TargetType="Label">
@@ -40,20 +41,29 @@
                         <Label Grid.Column="3" Text="Username"/>
                         <Label Grid.Column="4" Text="Password"/>
                         <Label Grid.Column="5" Text="Challenge"/>
-                        <Label Grid.Column="6" Text="Status"/>
-                        <Label Grid.Column="7" Text="Proxy"/>
-                        <Label Grid.Column="8" Text="Created"/>
-                        <Label Grid.Column="9" Text="Updated"/>
-                        <Label Grid.Column="10" Text="Followers"/>
-                        <Label Grid.Column="11" Text="Followings"/>
+                        <!--<Label Grid.Column="6" Text="Status"/>-->
+                        <Label Grid.Column="6" Text="Proxy"/>
+                        <Label Grid.Column="7" Text="Created"/>
+                        <Label Grid.Column="8" Text="Updated"/>
+                        <Label Grid.Column="9" Text="Followers"/>
+                        <Label Grid.Column="10" Text="Followings"/>
                     </Grid>
                 </CollectionView.Header>
                 <CollectionView.ItemsLayout>
                     <LinearItemsLayout Orientation="Vertical" ItemSpacing="4"/>
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:SenderAccount">
-                        <Grid ColumnDefinitions="Auto,300,40,*,*,*,*,300,*,*,*,*" ColumnSpacing="10" Padding="5,0">
+                    <DataTemplate>
+                        <!--<SwipeView Padding="10">
+                            <SwipeView.RightItems>
+                                <SwipeItems Mode="Execute">
+                                    --><!--<SwipeItem Text="Delete account" BackgroundColor="{StaticResource Primary}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=QueueAccountCommand}" CommandParameter="{Binding .}"/>--><!--
+                                    <SwipeItem Text="Delete account" BackgroundColor="{StaticResource Primary}"
+                                        Command="{Binding DeleteSenderCommand}" CommandParameter="{Binding .}"/>
+                                </SwipeItems>
+                            </SwipeView.RightItems>-->
+                        <Grid ColumnDefinitions="Auto,300,40,*,*,*,300,*,*,*,*" ColumnSpacing="10" Padding="5,0">
                             <Grid.Resources>
                                 <ResourceDictionary>
                                     <Style TargetType="Label">
@@ -64,22 +74,30 @@
                                     </Style>
                                 </ResourceDictionary>
                             </Grid.Resources>
-                            <!--<Grid.GestureRecognizers>
-                                <TapGestureRecognizer NumberOfTapsRequired="2" Command="{Binding SelectSenderCommand}" CommandParameter="{Binding .}"/>
-                            </Grid.GestureRecognizers>-->
-                            <Label Grid.Column="0" Text="{Binding HasIssue}"/>
+                            <Label Grid.Column="0" FontFamily="Icons">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding HasIssue}" Value="False">
+                                        <Setter Property="TextColor" Value="{StaticResource TextPrimary}"/>
+                                        <Setter Property="Text" Value="{Static helper:Icon.CheckCircle}"/>
+                                    </DataTrigger>
+                                    <DataTrigger TargetType="Label" Binding="{Binding HasIssue}" Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource Primary}"/>
+                                        <Setter Property="Text" Value="{Static helper:Icon.XCircle}"/>
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
                             <Label Grid.Column="1" Text="{Binding Id}"/>
                             <Image Grid.Column="2" Source="{Binding ProfilePicture}" HeightRequest="40" HorizontalOptions="Center"/>
                             <Label Grid.Column="3" Text="{Binding Username}"/>
                             <Label Grid.Column="4" Text="{Binding Password}"/>
                             <Label Grid.Column="5" Text="{Binding ChallengeURL}"/>
-                            <Label Grid.Column="6" Text="{Binding Status}"/>
-                            <Label Grid.Column="7" Text="{Binding ProxyFK}"/>
-                            <Label Grid.Column="8" Text="{Binding CreatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
-                            <Label Grid.Column="9" Text="{Binding UpdatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
-                            <Label Grid.Column="10" Text="{Binding FollowersCount}"/>
-                            <Label Grid.Column="11" Text="{Binding FollowingsCount}"/>
+                            <Label Grid.Column="6" Text="{Binding ProxyFK}"/>
+                            <Label Grid.Column="7" Text="{Binding CreatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
+                            <Label Grid.Column="8" Text="{Binding UpdatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
+                            <Label Grid.Column="9" Text="{Binding FollowersCount}"/>
+                            <Label Grid.Column="10" Text="{Binding FollowingsCount}"/>
                         </Grid>
+                        <!--</SwipeView>-->
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

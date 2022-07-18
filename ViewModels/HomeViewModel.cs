@@ -10,6 +10,8 @@
         private readonly IMessageDataStore _messageDataStore;
         private readonly IProxyDataStore _proxyDataStore;
         private readonly IRecipientDataStore _recipientDataStore;
+        private Timer _timer;
+        private int time_interval;
         #endregion
 
         #region Properties
@@ -21,6 +23,12 @@
 
         [ObservableProperty]
         int failureCount;
+
+        [ObservableProperty]
+        bool isSending;
+
+        [ObservableProperty]
+        string status;
         #endregion
 
         #region Constructor
@@ -52,10 +60,11 @@
             {
                 IsBusy = true;
                 _logger.LogInformation("+Setup");
+                Status = "Ready";
                 MultipleHelper.LoadSessions();
                 //get message
                 Message = Preferences.Get(nameof(Message), string.Empty);
-
+                time_interval = Preferences.Get("TimeInterval", 10);
 
                 var activities = await _activityDataStore.GetItemsByDateAsync(DateTime.Today, DateTime.Now);
 
@@ -136,6 +145,10 @@
 
                                 sender.HasIssue = true;
 
+                                var update = await _senderDataStore.UpdateItemAsync(sender);
+                                if(!update)
+                                    _logger.LogError($"DB Update sender FAILED[{sender.Username}]");
+
                                 _logger.LogError($"sender FAILED[{sender.Username}] - {result.Info.Message}");
                             }
                         }
@@ -169,6 +182,57 @@
             {
                 IsBusy = false;
                 _logger.LogInformation("-Send");
+            }
+        }
+
+        [ICommand]
+        async Task BackgroundSend()
+        {
+            try
+            {
+                _logger.LogInformation("+BackgroundSend");
+                var startTimeSpan = TimeSpan.Zero;
+                var rand = new Random();
+                time_interval = rand.Next(13,15);
+                var periodTimeSpan = TimeSpan.FromMinutes(time_interval);
+
+                IsSending = true;
+                _timer = new Timer((e) =>
+                {
+                    MainThread.BeginInvokeOnMainThread(async () =>
+                    {
+                        var nextBlast = DateTime.Now.AddMinutes(time_interval).ToString("G");
+                        Status = $"Sending.. next blast [{nextBlast}]";
+
+                        await SendCommand.ExecuteAsync(null);
+                    });
+                }, null, startTimeSpan, periodTimeSpan);
+            }
+            catch(Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
+            finally
+            {
+                _logger.LogInformation("-BackgroundSend");
+            }
+        }
+
+        [ICommand]
+        async Task BackgroundCancelSend()
+        {
+            try
+            {
+                Status = "Ready";
+                _logger.LogInformation("+BackgroundCancelSend");
+                IsSending = false;
+                if (_timer != null)
+                    _timer.Dispose();
+            }
+            finally
+            {
+                _logger.LogInformation("-BackgroundCancelSend");
             }
         }
         #endregion

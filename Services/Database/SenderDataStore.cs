@@ -22,6 +22,7 @@
                 Id = Guid.NewGuid(),
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now,
+                JoinDate = item.JoinDate,
                 ChallengeURL = item.ChallengeURL,
                 HasIssue = item.HasIssue,
                 Username = item.Username,
@@ -126,6 +127,7 @@
                 ChallengeURL = item.ChallengeURL,
                 FollowersCount = item.FollowersCount,
                 FollowingsCount = item.FollowingsCount,
+                JoinDate = item.JoinDate,
                 UpdatedDate = DateTime.Now
             };
             var id = await db.UpdateAsync(obj);
@@ -135,6 +137,9 @@
         public async Task<SenderAccount> GetItemByUsernameAsync(string name)
         {
             await Init();
+
+            var objects = await db.Table<SenderAccount>().ToListAsync();
+
             var obj = await db.FindAsync<SenderAccount>(i => i.Username.ToLower().Equals(name.ToLower()));
             return obj;
         }

@@ -3,6 +3,12 @@
     public class ProxyDataStore : IProxyDataStore
     {
         private SQLiteAsyncConnection db;
+        private ISenderDataStore _senderDataStore;
+
+        public ProxyDataStore(ISenderDataStore senderDataStore)
+        {
+            _senderDataStore = senderDataStore;
+        }
 
         private async Task Init()
         {
@@ -123,6 +129,15 @@
             };
             var id = await db.UpdateAsync(obj);
             return id == 1;
+        }
+
+        public async Task<IEnumerable<ProxySetup>> GetItemRandomAsync()
+        {
+            await Init();
+            //SELECT * FROM table_name ORDER BY RAND() LIMIT N;
+            string query = $"SELECT * FROM [ProxySetup] ORDER BY RANDOM() LIMIT 1";
+            var proxies = await db.QueryAsync<ProxySetup>(query);
+            return proxies;
         }
     }
 }

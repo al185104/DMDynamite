@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+           x:Class="DMDynamite.Views.Popups.ChallengePopup"
+           xmlns:helper="clr-namespace:DMDynamite.Helpers"
+           Size="800,600"
+           CanBeDismissedByTappingOutsideOfPopup="False"
+           xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+    <Grid RowDefinitions="*,Auto" RowSpacing="10" Padding="10">
+        <WebView Grid.Row="0" x:Name="webview" HorizontalOptions="FillAndExpand" />
+        <Button Grid.Row="1" x:Name="btnBack" Text="Back" Clicked="btnBack_Clicked"/>
+    </Grid>
+</mct:Popup>

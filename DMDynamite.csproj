@@ -92,6 +92,9 @@
 	  <MauiXaml Update="Views\HomePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\Popups\ChallengePopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\Popups\LoginPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

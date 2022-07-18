@@ -51,6 +51,7 @@ public static class MauiProgram
         #region Popup
         service.AddTransient<LoginPopup>();
         service.AddTransient<ProxyPopup>();
+        service.AddTransient<ChallengePopup>();
         #endregion
 
         #region Essentials Services
@@ -62,9 +63,9 @@ public static class MauiProgram
         service.AddSingleton<IInstagramService, InstagramService>();
         service.AddSingleton<IActivityDataStore, ActivityDataStore>();
         service.AddSingleton<IMessageDataStore, MessageDataStore>();
-        service.AddSingleton<IProxyDataStore, ProxyDataStore>();
         service.AddSingleton<IRecipientDataStore, RecipientDataStore>();
         service.AddSingleton<ISenderDataStore, SenderDataStore>();
+        service.AddSingleton<IProxyDataStore, ProxyDataStore>();
         #endregion
 
         return builder.Build();

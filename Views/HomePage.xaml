@@ -48,15 +48,21 @@
 
         <Grid RowDefinitions="Auto,Auto,*,Auto" Grid.Column="1" VerticalOptions="FillAndExpand" Padding="40">
             <Label Grid.Row="0" Text="Blast this message!" FontFamily="Header" FontSize="Header" HorizontalTextAlignment="Start"/>
-            <Label Grid.Row="1" Text="The quick brown fox jumps over the lazy dog." FontFamily="Regular" FontSize="Small" HorizontalTextAlignment="Start"/>
+            <Label Grid.Row="1" Text="Make sure to review the instagram DM guidelines." FontFamily="Regular" FontSize="Small" HorizontalTextAlignment="Start"/>
             <Editor Grid.Row="2" VerticalOptions="FillAndExpand" Text="{Binding Message}"/>
             <Button Grid.Row="3" Text="Send" ImageSource="{FontImage Color=White, FontFamily=Icons, Glyph={Static helper:Icon.Send}}" FontFamily="Header" FontSize="Large" HorizontalOptions="End" 
-                    BorderColor="White" Padding="50,15,60,10" Command="{Binding SendCommand}"/>
+                    BorderColor="White" Padding="50,15,60,10" Command="{Binding BackgroundSendCommand}"/>
         </Grid>
 
-        <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Padding="20" BackgroundColor="{StaticResource TextPrimary}">
-            <Label Text="Status" FontFamily="Header" FontSize="Title" VerticalTextAlignment="Center"/>
-        </HorizontalStackLayout>
+        <Grid Grid.Row="1" Grid.ColumnSpan="2" ColumnDefinitions="*,Auto" Padding="20" BackgroundColor="{StaticResource TextPrimary}">
+            <Label Grid.Column="0" Text="{Binding Status}" FontFamily="RegularBold" FontSize="Title" VerticalTextAlignment="Center" HorizontalOptions="Start"/>
+            <Label Grid.Column="1" Text="{Static helper:Icon.StopCircle}" FontFamily="Icons" FontSize="Title" HorizontalOptions="End"
+                   IsVisible="{Binding IsSending}">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding BackgroundCancelSendCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+        </Grid>
 
         <ActivityIndicator Grid.RowSpan="2" Grid.ColumnSpan="2" Color="{StaticResource TextPrimary}"/>
     </Grid>

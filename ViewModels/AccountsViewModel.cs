@@ -56,8 +56,12 @@
 
                     // get account from db
                     var account = await _senderDataStore.GetItemByUsernameAsync(acc.UserName);
-                    if(account != null)
+                    if (account != null)
                         Senders.Add(account);
+                    else
+                    {
+                        Console.WriteLine("hmm");
+                    }
                 }
             }
             catch (Exception e)
@@ -78,8 +82,9 @@
             try
             {
                 _logger.LogInformation("+ShowLoginPopup");
+                // setting if random here
                 var proxies = await _proxyDataStore.GetItemsAsync();
-
+                //var proxies = await _proxyDataStore.GetItemRandomAsync();
                 var acc = await App.Current.MainPage.ShowPopupAsync(new LoginPopup(proxies));
 
                 if (acc != null)
@@ -98,9 +103,9 @@
                             account.ProfilePicture = obj.Value.ProfilePicUrl;
                             account.FollowersCount = (int)obj.Value.FollowerCount;
                             account.FollowingsCount = (int)obj.Value.FollowingCount;
-                            await _senderDataStore.AddItemAsync(account);
                         }
-
+                        
+                        await _senderDataStore.AddItemAsync(account);
                         await LoadSendersCommand.ExecuteAsync(null);
                     }
                 }
@@ -127,7 +132,16 @@
 
                 if (_proxy != null)
                 {
-                    await _proxyDataStore.AddItemAsync(_proxy as ProxySetup);
+                    if(_proxy is List<ProxySetup>)
+                    {
+                        var proxyList = _proxy as List<ProxySetup>;
+                        foreach (var proxy in proxyList)
+                            await _proxyDataStore.AddItemAsync(proxy);
+                    }
+                    else
+                        await _proxyDataStore.AddItemAsync(_proxy as ProxySetup);
+
+                    await App.Current.MainPage.DisplayAlert("Proxy added", "Successfully added new proxy/ies", "Okay");
                 }
             }
             catch (Exception e)
@@ -363,6 +377,101 @@
             finally
             {
                 _logger.LogInformation("-SelectSender");
+            }
+        }
+
+        [ICommand]
+        async Task FixAccount(object obj)
+        {
+            try
+            {
+                _logger.LogInformation("+FixAccount");
+
+                if (obj == null) return;
+
+                var account = obj as SenderAccount;
+
+                //var _api = MultipleHelper.ApiList.FirstOrDefault(i => i.GetLoggedUser().LoggedInUser.UserName.ToLower().Equals(account.Username.ToLower()));
+                //var info = await _api.WebProcessor.GetAccountInfoAsync();
+                //if(info.Succeeded)
+                //{
+                //    account.JoinDate = (DateTime)info.Value.JoinedDate;
+                //}
+
+                if (!string.IsNullOrEmpty(account.ChallengeURL))
+                {
+                    await Clipboard.SetTextAsync($"{account.Username}\t{account.Password}");
+                    await App.Current.MainPage.ShowPopupAsync(new ChallengePopup(account.ChallengeURL));
+
+                    account.HasIssue = false;
+                    account.ChallengeURL = string.Empty;
+                    var upd = await _senderDataStore.UpdateItemAsync(account);
+                    if(upd)
+                        await LoadSendersCommand.ExecuteAsync(null);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
+            finally
+            {
+                _logger.LogInformation("-FixAccount");
+            }
+
+        }
+
+        [ICommand]
+        async Task RefreshAccounts()
+        {
+            try
+            {
+                _logger.LogInformation("+RefreshAccounts");
+                await LoadSendersCommand.ExecuteAsync(null);
+            }
+            catch(Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
+            finally
+            {
+                _logger.LogInformation("-RefreshAccounts");
+            }
+        }
+
+        [ICommand]
+        async Task DeleteSender(object obj)
+        {
+            try
+            {
+                _logger.LogInformation("+DeleteSender");
+                if (obj == null) return;
+
+                var account = obj as SenderAccount;
+
+                var _api = MultipleHelper.ApiList.FirstOrDefault(i => i.GetLoggedUser().LoggedInUser.UserName.ToLower().Equals(account.Username.ToLower()));
+                var ret = await _api.LogoutAsync();
+                if (ret.Succeeded)
+                {
+                    var file = account.Username.GetAccountPath();
+
+                    if (File.Exists(file))
+                    {
+                        File.Delete(file);
+                        var del = await _senderDataStore.DeleteItemAsync(account.Id);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
+            finally
+            {
+                _logger.LogInformation("-DeleteSender");
             }
         }
         #endregion

@@ -2,5 +2,6 @@
 {
     public interface IProxyDataStore : IDataStore<ProxySetup>
     {
+        Task<IEnumerable<ProxySetup>> GetItemRandomAsync();
     }
 }

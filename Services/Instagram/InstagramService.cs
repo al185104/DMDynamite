@@ -195,7 +195,7 @@
                         err = ret.Info.Message;
                 }
             }
-            return Result.Fail<string>($"{sender}- failed to send a message to {recipient} : {err}",ResponseType.UnExpectedResponse, $"{sender}:{recipient.Username}");
+            return Result.Fail<string>($"{sender}- failed to send a message to {recipient.Fullname} : {err}",ResponseType.UnExpectedResponse, $"{sender}:{recipient.Username}");
         }
 
         public async Task<IResult<InstaLoginTwoFactorResult>> TwoFactorAuthentication(IInstaApi api, string username, string code)
