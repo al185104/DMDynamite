@@ -142,6 +142,8 @@
                                 // if bad: remove problematic sender                                
                                 if (result.Info.ResponseType == ResponseType.ChallengeRequired && !string.IsNullOrEmpty(result.Info.Message))
                                     sender.ChallengeURL = result.Info.Message;
+                                else if (result.Info.Message.Contains("feedback_required"))
+                                    sender.Status = "feedback required";
 
                                 sender.HasIssue = true;
 
@@ -193,7 +195,7 @@
                 _logger.LogInformation("+BackgroundSend");
                 var startTimeSpan = TimeSpan.Zero;
                 var rand = new Random();
-                time_interval = rand.Next(13,15);
+                time_interval = rand.Next(15,20);
                 var periodTimeSpan = TimeSpan.FromMinutes(time_interval);
 
                 IsSending = true;

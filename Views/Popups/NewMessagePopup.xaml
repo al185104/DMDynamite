@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"             
+        x:Class="DMDynamite.Views.Popups.NewMessagePopup"
+        xmlns:helper="clr-namespace:DMDynamite.Helpers"
+        Size="800,600"
+        CanBeDismissedByTappingOutsideOfPopup="True"
+        xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+    <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="20" Padding="10" BackgroundColor="{StaticResource TextSecondary}">
+        <Grid.Resources>
+            <ResourceDictionary>
+                <Style TargetType="Label">
+                    <Setter Property="TextColor" Value="White"/>
+                </Style>
+                <Style TargetType="Button">
+                    <Setter Property="BackgroundColor" Value="White"/>
+                    <Setter Property="TextColor" Value="{StaticResource TextSecondary}"/>
+                </Style>
+                <Style TargetType="Entry">
+                    <Setter Property="TextColor" Value="White"/>
+                    <Setter Property="FontFamily" Value="Regular"/>
+                </Style>
+                <Style TargetType="Editor">
+                    <Setter Property="TextColor" Value="White"/>
+                    <Setter Property="FontFamily" Value="Regular"/>
+                </Style>
+            </ResourceDictionary>
+        </Grid.Resources>
+        <Label Grid.Row="0" Text="Add message template" FontFamily="Header" FontSize="Title"/>
+        <Entry Grid.Row="1" x:Name="subject" Placeholder="Subject"/>
+        <Editor Grid.Row="2" x:Name="body" Placeholder="Body"/>
+        <Button Grid.Row="3" x:Name="btnBack" Text="Back" Clicked="btnBack_Clicked"/>
+    </Grid>
+</mct:Popup>

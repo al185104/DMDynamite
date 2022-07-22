@@ -83,8 +83,7 @@
             {
                 _logger.LogInformation("+ShowLoginPopup");
                 // setting if random here
-                var proxies = await _proxyDataStore.GetItemsAsync();
-                //var proxies = await _proxyDataStore.GetItemRandomAsync();
+                var proxies = await _proxyDataStore.GetItemRandomAsync();
                 var acc = await App.Current.MainPage.ShowPopupAsync(new LoginPopup(proxies));
 
                 if (acc != null)
@@ -104,7 +103,11 @@
                             account.FollowersCount = (int)obj.Value.FollowerCount;
                             account.FollowingsCount = (int)obj.Value.FollowingCount;
                         }
-                        
+
+                        var proxy = proxies.ElementAt(0);
+                        proxy.IsUsed = true;
+
+                        await _proxyDataStore.UpdateItemAsync(proxy);
                         await _senderDataStore.AddItemAsync(account);
                         await LoadSendersCommand.ExecuteAsync(null);
                     }
@@ -406,7 +409,14 @@
                     account.HasIssue = false;
                     account.ChallengeURL = string.Empty;
                     var upd = await _senderDataStore.UpdateItemAsync(account);
-                    if(upd)
+                    if (upd)
+                        await LoadSendersCommand.ExecuteAsync(null);
+                }
+                else
+                {
+                    account.HasIssue = false;
+                    var upd = await _senderDataStore.UpdateItemAsync(account);
+                    if (upd)
                         await LoadSendersCommand.ExecuteAsync(null);
                 }
             }
@@ -461,6 +471,7 @@
                     {
                         File.Delete(file);
                         var del = await _senderDataStore.DeleteItemAsync(account.Id);
+                        await LoadSendersCommand.ExecuteAsync(null);
                     }
                 }
             }

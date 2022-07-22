@@ -3,12 +3,6 @@
     public class ProxyDataStore : IProxyDataStore
     {
         private SQLiteAsyncConnection db;
-        private ISenderDataStore _senderDataStore;
-
-        public ProxyDataStore(ISenderDataStore senderDataStore)
-        {
-            _senderDataStore = senderDataStore;
-        }
 
         private async Task Init()
         {
@@ -28,6 +22,7 @@
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now,
                 Id = Guid.NewGuid(),
+                IsUsed = false,
                 ProxyName = item.ProxyName,
                 ProxyHost = item.ProxyHost,
                 ProxyPort = item.ProxyPort,
@@ -125,6 +120,7 @@
                 ProxyPort = item.ProxyPort,
                 ProxyUsername = item.ProxyUsername,
                 ProxyPassword = item.ProxyPassword,
+                IsUsed = item.IsUsed,
                 UpdatedDate = DateTime.Now
             };
             var id = await db.UpdateAsync(obj);
@@ -134,10 +130,16 @@
         public async Task<IEnumerable<ProxySetup>> GetItemRandomAsync()
         {
             await Init();
-            //SELECT * FROM table_name ORDER BY RAND() LIMIT N;
-            string query = $"SELECT * FROM [ProxySetup] ORDER BY RANDOM() LIMIT 1";
-            var proxies = await db.QueryAsync<ProxySetup>(query);
-            return proxies;
+
+            var objects = await db.Table<ProxySetup>().ToListAsync();
+            
+            List<ProxySetup> list = new();
+            var proxy = objects.FirstOrDefault(i => i.IsUsed == false);
+            list.Add(proxy);
+            return list;
+            //string query = $"SELECT * FROM [ProxySetup] WHERE IsUsed = false ORDER BY RANDOM() LIMIT 1";
+            //var proxies = await db.QueryAsync<ProxySetup>(query);
+            //return proxies;
         }
     }
 }

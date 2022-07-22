@@ -91,7 +91,7 @@
         {
             await Init();
             var objects = await db.Table<SenderAccount>().ToListAsync();
-            return objects;
+            return objects.OrderByDescending(i => i.CreatedDate);
         }
 
         public async Task<IEnumerable<SenderAccount>> GetItemsByRangeAsync(int range)

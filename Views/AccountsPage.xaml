@@ -19,6 +19,9 @@
                         Command="{Binding ShowProxyPopupCommand}"/>
                 <Button Text="Fix accounts" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.Tool}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"
                         Command="{Binding FixAccountCommand}" CommandParameter="{Binding Source={Reference senders}, Path=SelectedItem}"/>
+
+                <Button Text="Logout account" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.LogOut}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"
+                        Command="{Binding DeleteSenderCommand}" CommandParameter="{Binding Source={Reference senders}, Path=SelectedItem}"/>
             </HorizontalStackLayout>
         </Grid>
 
@@ -54,16 +57,7 @@
                 </CollectionView.ItemsLayout>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <!--<SwipeView Padding="10">
-                            <SwipeView.RightItems>
-                                <SwipeItems Mode="Execute">
-                                    --><!--<SwipeItem Text="Delete account" BackgroundColor="{StaticResource Primary}"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=QueueAccountCommand}" CommandParameter="{Binding .}"/>--><!--
-                                    <SwipeItem Text="Delete account" BackgroundColor="{StaticResource Primary}"
-                                        Command="{Binding DeleteSenderCommand}" CommandParameter="{Binding .}"/>
-                                </SwipeItems>
-                            </SwipeView.RightItems>-->
-                        <Grid ColumnDefinitions="Auto,300,40,*,*,*,300,*,*,*,*" ColumnSpacing="10" Padding="5,0">
+                        <Grid ColumnDefinitions="Auto,300,*,*,*,300,*,*,*,*" ColumnSpacing="10" Padding="5,0">
                             <Grid.Resources>
                                 <ResourceDictionary>
                                     <Style TargetType="Label">
@@ -87,7 +81,7 @@
                                 </Label.Triggers>
                             </Label>
                             <Label Grid.Column="1" Text="{Binding Id}"/>
-                            <Image Grid.Column="2" Source="{Binding ProfilePicture}" HeightRequest="40" HorizontalOptions="Center"/>
+                            <!--<Image Grid.Column="2" Source="{Binding ProfilePicture}" HeightRequest="40" HorizontalOptions="Center"/>-->
                             <Label Grid.Column="3" Text="{Binding Username}"/>
                             <Label Grid.Column="4" Text="{Binding Password}"/>
                             <Label Grid.Column="5" Text="{Binding ChallengeURL}"/>

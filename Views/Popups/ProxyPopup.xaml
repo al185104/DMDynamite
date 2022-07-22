@@ -30,14 +30,12 @@
         <Entry x:Name="port" Grid.Row="2" Grid.Column="1" Placeholder="Proxy port"/>
 
         <Entry x:Name="uname" Grid.Row="3" Grid.Column="0" Placeholder="Proxy username" VerticalOptions="Start"/>
-        <Entry x:Name="pass" Grid.Row="3" Grid.Column="1" Placeholder="Proxy password" ReturnCommand="{Binding ReturnCommand}" VerticalOptions="Start"/>
+        <Entry x:Name="pass" Grid.Row="3" Grid.Column="1" Placeholder="Proxy password" VerticalOptions="Start"/>
 
         <Button x:Name="saveBtn" Grid.Row="4" Grid.ColumnSpan="3" VerticalOptions="End" Text="{Static helper:Icon.Save}" FontFamily="Icons"
                 Clicked="saveBtn_Clicked" FontSize="Medium" HeightRequest="40"/>
 
         <Entry x:Name="startNumber" Grid.Column="2" Grid.Row="1" Placeholder="start number" />
         <Editor Grid.Column="2" Grid.Row="2" Grid.RowSpan="2" x:Name="formattedProxy" Placeholder="formatted proxy list"/>
-        <!--<Button x:Name="downloadBtn" Grid.Column="2" Grid.Row="4" Text="{Static helper:Icon.Download}" FontFamily="Icons" 
-                Clicked="downloadBtn_Clicked" FontSize="Medium" HeightRequest="40" VerticalOptions="End"/>-->
     </Grid>
 </mct:Popup>

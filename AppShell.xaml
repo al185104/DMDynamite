@@ -47,6 +47,9 @@
     <FlyoutItem Icon="{Static helper:Icon.Calendar}">
         <ShellContent ContentTemplate="{DataTemplate views:ReportsPage}" Route="ReportsPage" />
     </FlyoutItem>
+    <FlyoutItem Icon="{Static helper:Icon.MessageCircle}">
+        <ShellContent ContentTemplate="{DataTemplate views:MessagesPage}" Route="MessagesPage" />
+    </FlyoutItem>
     <FlyoutItem Icon="{Static helper:Icon.Settings}">
         <ShellContent ContentTemplate="{DataTemplate views:SettingsPage}" Route="SettingsPage" />
     </FlyoutItem>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:DMDynamite.Models"
+             xmlns:helper="clr-namespace:DMDynamite.Helpers"
+             x:Class="DMDynamite.Views.MessagesPage"
+             Shell.NavBarIsVisible="False"
+             Title="MessagesPage">
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" Padding="10" ColumnDefinitions="*,*,Auto" ColumnSpacing="20">
+            <VerticalStackLayout Spacing="0">
+                <Label Text="Messages to send." FontSize="Header" FontFamily="Header"/>
+                <Label Text="{Binding Messages.Count, StringFormat='{0} messages.'}" FontSize="Caption" FontFamily="RegularBold"/>
+            </VerticalStackLayout>
+
+            <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End" Spacing="10">
+                <Button Text="Add message" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.MessageCircle}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"
+                        Command="{Binding AddMessageCommand}"/>
+                <Button Text="Delete message" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.Trash}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"
+                        Command="{Binding DeleteMessageCommand}" CommandParameter="{Binding Source={Reference messages}, Path=SelectedItem}"/>
+            </HorizontalStackLayout>
+        </Grid>
+
+        <RefreshView Grid.Row="1">
+            <CollectionView x:Name="messages" ItemsSource="{Binding Messages}" SelectionMode="Multiple" SelectedItems="{Binding SelectedMessages, Mode=TwoWay}">
+                <CollectionView.Header>
+                    <Grid ColumnDefinitions="100,100,*,80,80" BackgroundColor="{StaticResource TextPrimary}" ColumnSpacing="10" Padding="5,10">
+                        <Grid.Resources>
+                            <ResourceDictionary>
+                                <Style TargetType="Label">
+                                    <Setter Property="TextColor" Value="White"/>
+                                    <Setter Property="FontAttributes" Value="Bold"/>
+                                    <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                                    <Setter Property="VerticalTextAlignment" Value="Center"/>
+                                    <Setter Property="MaxLines" Value="1"/>
+                                </Style>
+                            </ResourceDictionary>
+                        </Grid.Resources>
+                        <Label Grid.Column="0" Text="Id"/>
+                        <Label Grid.Column="1" Text="Subject"/>
+                        <Label Grid.Column="2" Text="Body"/>
+                        <Label Grid.Column="3" Text="Created"/>
+                        <Label Grid.Column="4" Text="Updated"/>
+                    </Grid>
+                </CollectionView.Header>
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="4"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Message">
+                        <Grid ColumnDefinitions="100,100,*,80,80" ColumnSpacing="10" Padding="5,0">
+                            <Grid.Resources>
+                                <ResourceDictionary>
+                                    <Style TargetType="Label">
+                                        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                                        <Setter Property="VerticalTextAlignment" Value="Center"/>
+                                        <Setter Property="MaxLines" Value="5"/>
+                                        <Setter Property="LineBreakMode" Value="TailTruncation"/>
+                                    </Style>
+                                </ResourceDictionary>
+                            </Grid.Resources>
+                            <Label Grid.Column="0" Text="{Binding Id}"/>
+                            <Label Grid.Column="1" Text="{Binding Subject}"/>
+                            <Label Grid.Column="2" Text="{Binding Body}" LineBreakMode="WordWrap"/>
+                            <Label Grid.Column="3" Text="{Binding CreatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
+                            <Label Grid.Column="4" Text="{Binding UpdatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+
+        <ActivityIndicator Grid.RowSpan="2"/>
+    </Grid>
+</ContentPage>

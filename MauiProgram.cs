@@ -38,6 +38,7 @@ public static class MauiProgram
         service.AddSingleton<RecipientsPage>();
         service.AddSingleton<HomePage>();
         service.AddSingleton<ReportsPage>();
+        service.AddSingleton<MessagesPage>();
         #endregion
 
         #region ViewModels
@@ -46,12 +47,14 @@ public static class MauiProgram
         service.AddSingleton<RecipientsViewModel>();
         service.AddSingleton<HomeViewModel>();
         service.AddSingleton<ReportsViewModel>();
+        service.AddSingleton<MessagesViewModel>();
         #endregion
 
         #region Popup
         service.AddTransient<LoginPopup>();
         service.AddTransient<ProxyPopup>();
         service.AddTransient<ChallengePopup>();
+        service.AddTransient<NewMessagePopup>();
         #endregion
 
         #region Essentials Services
