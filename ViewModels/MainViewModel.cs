@@ -11,6 +11,7 @@
         private readonly IProxyDataStore _proxyDataStore;
         private readonly IRecipientDataStore _recipientDataStore;
         private readonly ISenderDataStore _senderDataStore;
+        private readonly int _maxPagesToLoad = 1;
         #endregion
 
         #region Constructors
@@ -31,6 +32,8 @@
             _recipientDataStore = recipientDataStore;
             _senderDataStore = senderDataStore;
 
+
+            _maxPagesToLoad = Preferences.Get("MaxPageToLoad", 1);
             _logger.IsEnabled(LogLevel.Information);
         }
         #endregion
@@ -226,11 +229,11 @@
                 }
 
                 if (sendingOption == SendingOption.Location)
-                    followerList = await _instagramService.SearchByLocationTagAsync(_api, latitude, longitude, search, PaginationParameters.MaxPagesToLoad(5), 1000, searchFromTop); // true is search top results
+                    followerList = await _instagramService.SearchByLocationTagAsync(_api, latitude, longitude, search, PaginationParameters.MaxPagesToLoad(_maxPagesToLoad), 1000, searchFromTop); // true is search top results
                 else if (sendingOption == SendingOption.Hashtag)
-                    followerList = await _instagramService.SearchByHashTagAsync(_api, search, PaginationParameters.MaxPagesToLoad(2), 1000);
+                    followerList = await _instagramService.SearchByHashTagAsync(_api, search, PaginationParameters.MaxPagesToLoad(_maxPagesToLoad), 1000);
                 else
-                    followerList = await _api.UserProcessor.GetUserFollowersAsync(search, PaginationParameters.MaxPagesToLoad(2));
+                    followerList = await _api.UserProcessor.GetUserFollowersAsync(search, PaginationParameters.MaxPagesToLoad(_maxPagesToLoad));
 
                 if (followerList.Succeeded)
                 {

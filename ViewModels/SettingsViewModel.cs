@@ -20,6 +20,9 @@
 
         [ObservableProperty]
         bool randomizeProxy;
+
+        [ObservableProperty]
+        int maxPageToLoad = 1;
         #endregion
 
         #region Constructor
@@ -39,6 +42,7 @@
             Preferences.Set(nameof(StopOnError), StopOnError);
             Preferences.Set(nameof(RandomizeMessage), RandomizeMessage);
             Preferences.Set(nameof(RandomizeProxy), RandomizeProxy);
+            Preferences.Set(nameof(MaxPageToLoad), MaxPageToLoad);
         }
 
         [ICommand]
@@ -50,6 +54,7 @@
             StopOnError = Preferences.Get(nameof(StopOnError), false);
             RandomizeMessage = Preferences.Get(nameof(RandomizeMessage), false);
             RandomizeProxy = Preferences.Get(nameof(RandomizeProxy), false);
+            MaxPageToLoad = Preferences.Get(nameof(MaxPageToLoad), 1);
         }
         #endregion
     }

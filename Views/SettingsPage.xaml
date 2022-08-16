@@ -52,6 +52,13 @@
                     <Entry Grid.Column="1" Grid.RowSpan="2" Placeholder="1000" Text="{Binding FollowersCount}"/>
                 </Grid>
 
+                <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,1.5*">
+                    <Label Grid.Row="0" Grid.Column="0" Text="Max pages to search" FontAttributes="Bold" FontSize="Small"/>
+                    <Label Grid.Row="1" Grid.Column="0" Text="Number of pages to load upon searching with the api. The value is between 1 - 10." FontSize="Caption"/>
+
+                    <Slider Grid.Column="1" Grid.RowSpan="2" Maximum="10" Minimum="1" Value="{Binding MaxPageToLoad}" />
+                </Grid>
+
                 <BoxView HeightRequest="1" Color="{StaticResource TextPrimary}" VerticalOptions="Center" HorizontalOptions="FillAndExpand"/>
 
                 <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,1.5*">
