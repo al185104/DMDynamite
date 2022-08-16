@@ -4,6 +4,8 @@
     {
         private SQLiteAsyncConnection db;
 
+        public Message CurrentMessage { get; set; }
+
         private async Task Init()
         {
             if (db != null)
@@ -38,6 +40,14 @@
         {
             await Init();
             var ret = await db.DeleteAsync<Message>(id);
+
+            if(id == CurrentMessage.Id)
+            {
+                var items = await GetItemRandomAsync();
+                if (!items.Any())
+                    CurrentMessage = null;
+            }
+
             return ret == 1;
         }
 
@@ -71,6 +81,7 @@
         {
             await Init();
             var obj = await db.GetAsync<Message>(id);
+            CurrentMessage = obj;
             return obj;
         }
 
@@ -91,6 +102,7 @@
 
                 if (objects.Count < range)
                     range = objects.Count;
+
                 return objects.GetRange(0, range);
             }
             catch (ArgumentException)
@@ -123,6 +135,10 @@
 
             List<Message> list = new();
             list.Add(objects.ElementAt(rand.Next(0,objects.Count - 1)));
+
+            if(list.Count > 0)
+                CurrentMessage = list.ElementAt(0);
+
             return list;
         }
     }

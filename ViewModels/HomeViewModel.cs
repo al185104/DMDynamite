@@ -12,11 +12,12 @@
         private readonly IRecipientDataStore _recipientDataStore;
         private Timer _timer;
         private int time_interval;
+        private Message messageObj;
         #endregion
 
         #region Properties
         [ObservableProperty]
-        string message;
+        string message;        
 
         [ObservableProperty]
         int successCount;
@@ -48,6 +49,14 @@
             _proxyDataStore = proxyDataStore;
             _recipientDataStore = recipientDataStore;
             _senderDataStore = senderDataStore;
+
+
+            MessagingCenter.Unsubscribe<MessagesViewModel>(this, MessagingKeys.RefreshUsedMessage);
+            MessagingCenter.Subscribe<MessagesViewModel>(this, MessagingKeys.RefreshUsedMessage, (sender) =>
+            {
+                messageObj = _messageDataStore.CurrentMessage;
+                Message = messageObj.Body;
+            });
         }
         #endregion
 
@@ -63,8 +72,15 @@
                 Status = "Ready";
                 MultipleHelper.LoadSessions();
                 //get message
-                Message = Preferences.Get(nameof(Message), string.Empty);
+                //Message = Preferences.Get(nameof(Message), string.Empty);
                 time_interval = Preferences.Get("TimeInterval", 10);
+
+                var msgs = await _messageDataStore.GetItemRandomAsync();
+                if (msgs != null && msgs.Any())
+                {
+                    messageObj = msgs.ElementAt(0);
+                    Message = messageObj.Body;
+                }
 
                 var activities = await _activityDataStore.GetItemsByDateAsync(DateTime.Today, DateTime.Now);
 
@@ -96,17 +112,43 @@
 
                 if (string.IsNullOrEmpty(message))
                     return;
-                    
-                Preferences.Set(nameof(Message), message);
 
+                if (!message.Equals(messageObj.Body))
+                {
+                    var msgRet = await App.Current.MainPage.DisplayPromptAsync("New message", "This seems to be a new message you're composing, add subject to save message.", "Save", "Back");
+                    if (string.IsNullOrEmpty(msgRet)) return;
+
+                    var msg = new Message
+                    {
+                        Body = message,
+                        Subject = msgRet,
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now
+                    };
+
+                    if (!await _messageDataStore.AddItemAsync(msg))
+                    {
+                        _logger.LogError("something went wrong in adding message.");
+                        return;
+                    }
+
+                    messageObj = msg;
+                }
+                
                 // create task list
                 var tasks = new List<Task<IResult<string>>>();
                 // get all senders
-                var senders = await _senderDataStore.GetItemsAsync();
+                var senders = (await _senderDataStore.GetItemsAsync()).Where(i => i.HasIssue == false);
                 var recipients = await _recipientDataStore.GetItemsByOffsetAsync(0, senders.Count());
 
+                if (!recipients.Any())
+                {
+                    BackgroundCancelSendCommand.Execute(null);
+                    return;
+                }
+
                 // create tasks
-                for(int i = 0; i < senders.Count(); i++)
+                for (int i = 0; i < senders.Count() && i < recipients.Count(); i++)
                 {
                     if (!senders.ElementAt(i).HasIssue)
                     {
@@ -158,7 +200,7 @@
                         await _activityDataStore.AddItemAsync(new Activity
                         {
                             IsDeleted = false,
-                            Message = message,
+                            Message = messageObj.Id,
                             RecipientFK = recipient.Id,
                             SenderFK = sender.Id,
                             Status = string.Empty,
@@ -192,6 +234,7 @@
         {
             try
             {
+                await Task.Delay(100);
                 _logger.LogInformation("+BackgroundSend");
                 var startTimeSpan = TimeSpan.Zero;
                 var rand = new Random();
@@ -226,6 +269,7 @@
         {
             try
             {
+                await Task.Delay(100);
                 Status = "Ready";
                 _logger.LogInformation("+BackgroundCancelSend");
                 IsSending = false;

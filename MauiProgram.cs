@@ -39,6 +39,7 @@ public static class MauiProgram
         service.AddSingleton<HomePage>();
         service.AddSingleton<ReportsPage>();
         service.AddSingleton<MessagesPage>();
+        service.AddSingleton<SettingsPage>();
         #endregion
 
         #region ViewModels
@@ -48,6 +49,7 @@ public static class MauiProgram
         service.AddSingleton<HomeViewModel>();
         service.AddSingleton<ReportsViewModel>();
         service.AddSingleton<MessagesViewModel>();
+        service.AddSingleton<SettingsViewModel>();
         #endregion
 
         #region Popup

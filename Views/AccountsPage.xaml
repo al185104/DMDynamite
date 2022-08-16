@@ -28,7 +28,7 @@
         <RefreshView Grid.Row="1" Command="{Binding RefreshAccountsCommand}">
             <CollectionView x:Name="senders" ItemsSource="{Binding Senders}" SelectionMode="Single" SelectionChangedCommand="{Binding SelectSenderCommand}" SelectionChangedCommandParameter="{Binding Source={Reference senders}, Path=SelectedItem}">
                 <CollectionView.Header>
-                    <Grid ColumnDefinitions="Auto,300,50,*,*,*,300,*,*,*,*" BackgroundColor="{StaticResource TextPrimary}" ColumnSpacing="10" Padding="5,10">
+                    <Grid ColumnDefinitions="Auto,300,*,*,*,300,*,*,*,*" BackgroundColor="{StaticResource TextPrimary}" ColumnSpacing="10" Padding="5,10">
                         <Grid.Resources>
                             <ResourceDictionary>
                                 <Style TargetType="Label">
@@ -40,16 +40,14 @@
                         </Grid.Resources>
                         <Label Grid.Column="0" Text="Issue"/>
                         <Label Grid.Column="1" Text="Id"/>
-                        <Label Grid.Column="2" Text="Image"/>
-                        <Label Grid.Column="3" Text="Username"/>
-                        <Label Grid.Column="4" Text="Password"/>
-                        <Label Grid.Column="5" Text="Challenge"/>
-                        <!--<Label Grid.Column="6" Text="Status"/>-->
-                        <Label Grid.Column="6" Text="Proxy"/>
-                        <Label Grid.Column="7" Text="Created"/>
-                        <Label Grid.Column="8" Text="Updated"/>
-                        <Label Grid.Column="9" Text="Followers"/>
-                        <Label Grid.Column="10" Text="Followings"/>
+                        <Label Grid.Column="2" Text="Username"/>
+                        <Label Grid.Column="3" Text="Password"/>
+                        <Label Grid.Column="4" Text="Challenge"/>
+                        <Label Grid.Column="5" Text="Proxy"/>
+                        <Label Grid.Column="6" Text="Created"/>
+                        <Label Grid.Column="7" Text="Updated"/>
+                        <Label Grid.Column="8" Text="Followers"/>
+                        <Label Grid.Column="9" Text="Followings"/>
                     </Grid>
                 </CollectionView.Header>
                 <CollectionView.ItemsLayout>
@@ -81,17 +79,15 @@
                                 </Label.Triggers>
                             </Label>
                             <Label Grid.Column="1" Text="{Binding Id}"/>
-                            <!--<Image Grid.Column="2" Source="{Binding ProfilePicture}" HeightRequest="40" HorizontalOptions="Center"/>-->
-                            <Label Grid.Column="3" Text="{Binding Username}"/>
-                            <Label Grid.Column="4" Text="{Binding Password}"/>
-                            <Label Grid.Column="5" Text="{Binding ChallengeURL}"/>
-                            <Label Grid.Column="6" Text="{Binding ProxyFK}"/>
-                            <Label Grid.Column="7" Text="{Binding CreatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
-                            <Label Grid.Column="8" Text="{Binding UpdatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
-                            <Label Grid.Column="9" Text="{Binding FollowersCount}"/>
-                            <Label Grid.Column="10" Text="{Binding FollowingsCount}"/>
+                            <Label Grid.Column="2" Text="{Binding Username}"/>
+                            <Label Grid.Column="3" Text="{Binding Password}"/>
+                            <Label Grid.Column="4" Text="{Binding ChallengeURL}"/>
+                            <Label Grid.Column="5" Text="{Binding ProxyFK}"/>
+                            <Label Grid.Column="6" Text="{Binding CreatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
+                            <Label Grid.Column="7" Text="{Binding UpdatedDate, StringFormat='{0: dd - MMM - yyyy}'}"/>
+                            <Label Grid.Column="8" Text="{Binding FollowersCount}"/>
+                            <Label Grid.Column="9" Text="{Binding FollowingsCount}"/>
                         </Grid>
-                        <!--</SwipeView>-->
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

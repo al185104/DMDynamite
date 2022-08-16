@@ -83,6 +83,7 @@
             {
                 _logger.LogInformation("+ShowLoginPopup");
                 // setting if random here
+                var p = await _proxyDataStore.GetItemsAsync();
                 var proxies = await _proxyDataStore.GetItemRandomAsync();
                 var acc = await App.Current.MainPage.ShowPopupAsync(new LoginPopup(proxies));
 

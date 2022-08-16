@@ -17,7 +17,9 @@
                 <Button Text="Add message" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.MessageCircle}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"
                         Command="{Binding AddMessageCommand}"/>
                 <Button Text="Delete message" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.Trash}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"
-                        Command="{Binding DeleteMessageCommand}" CommandParameter="{Binding Source={Reference messages}, Path=SelectedItem}"/>
+                        Command="{Binding DeleteMessageCommand}"/>
+                <Button Text="Use message" ImageSource="{FontImage FontFamily=Icons, Glyph={Static helper:Icon.MessageSquare}, Size=Small}" VerticalOptions="Start" HeightRequest="50" Padding="10"
+                        Command="{Binding SelectMessageCommand}"/>
             </HorizontalStackLayout>
         </Grid>
 
@@ -52,9 +54,8 @@
                             <Grid.Resources>
                                 <ResourceDictionary>
                                     <Style TargetType="Label">
-                                        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                                        <Setter Property="HorizontalTextAlignment" Value="Start"/>
                                         <Setter Property="VerticalTextAlignment" Value="Center"/>
-                                        <Setter Property="MaxLines" Value="5"/>
                                         <Setter Property="LineBreakMode" Value="TailTruncation"/>
                                     </Style>
                                 </ResourceDictionary>

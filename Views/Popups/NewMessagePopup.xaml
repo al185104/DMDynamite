@@ -29,6 +29,6 @@
         <Label Grid.Row="0" Text="Add message template" FontFamily="Header" FontSize="Title"/>
         <Entry Grid.Row="1" x:Name="subject" Placeholder="Subject"/>
         <Editor Grid.Row="2" x:Name="body" Placeholder="Body"/>
-        <Button Grid.Row="3" x:Name="btnBack" Text="Back" Clicked="btnBack_Clicked"/>
+        <Button Grid.Row="3" x:Name="btnBack" Text="{Static helper:Icon.Save}" FontFamily="Icons" FontSize="Medium" Clicked="btnBack_Clicked"/>
     </Grid>
 </mct:Popup>

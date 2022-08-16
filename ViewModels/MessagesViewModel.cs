@@ -84,7 +84,10 @@
                             var msg = obj as Message;
                             var ret = await _messageDataStore.DeleteItemAsync(msg.Id);
                             if (ret)
+                            {
                                 Messages.Remove(msg);
+                                MessagingCenter.Send(this, MessagingKeys.RefreshUsedMessage);
+                            }
                         }
                     }
                 }
@@ -106,10 +109,10 @@
         {
             try
             {
-                IsBusy = true;
                 _logger.LogInformation("+AddMessage");
 
                 var obj = await App.Current.MainPage.ShowPopupAsync(new NewMessagePopup());
+                IsBusy = true;
 
                 if (obj != null)
                 {
@@ -128,6 +131,40 @@
             {
                 IsBusy = false;
                 _logger.LogInformation("-AddMessage");
+            }
+        }
+
+        [ICommand]
+        async Task SelectMessage()
+        {
+            try
+            {
+                IsBusy = true;
+                _logger.LogInformation("+SelectMessage");
+
+                if (SelectedMessages.Count > 0)
+                {
+                    var obj = SelectedMessages.ElementAt(0);
+                    if (obj != null)
+                    {
+                        var msg = obj as Message;
+
+                        _messageDataStore.CurrentMessage = msg;
+
+                        MessagingCenter.Send(this, MessagingKeys.RefreshUsedMessage);
+                        await App.Current.MainPage.DisplayAlert("Message selected", $"Set to use {msg.Subject} in blast","Okay");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                throw;
+            }
+            finally
+            {
+                _logger.LogInformation("-SelectMessage");
+                IsBusy = false; 
             }
         }
         #endregion
